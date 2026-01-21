@@ -9,8 +9,8 @@ export async function createImageService() {
     async generateImage(
       prompt: string,
       aspectRatio: string = "1:1",
-      referenceImages: ReferenceImage[] = [] // agora aceita várias imagens
-    ): Promise<{ imageUrl: string; model: string }> {
+      referenceImages: ReferenceImage[] = [] // aceita várias imagens
+    ): Promise<{ images: string[]; model: string }> {
       return await rotator.executeWithRotation(async (apiKey) => {
         const ai = new GoogleGenAI({ apiKey });
 
@@ -25,9 +25,7 @@ export async function createImageService() {
 
         // Sempre adiciona o prompt no final
         parts.push({
-          text:
-            prompt ||
-            "Uma arte digital cinematográfica e detalhada", // fallback se não houver prompt
+          text: prompt || "Uma arte digital cinematográfica e detalhada", // fallback
         });
 
         const geminiResponse = await ai.models.generateContent({
@@ -46,22 +44,26 @@ export async function createImageService() {
         // Debug opcional
         console.log("Gemini response:", JSON.stringify(geminiResponse, null, 2));
 
+        const images: string[] = [];
+
         if (
           geminiResponse.candidates &&
-          geminiResponse.candidates[0] &&
-          geminiResponse.candidates[0].content &&
-          geminiResponse.candidates[0].content.parts
+          geminiResponse.candidates[0]?.content?.parts
         ) {
           for (const part of geminiResponse.candidates[0].content.parts) {
             if (part.inlineData) {
               const base64EncodeString: string = part.inlineData.data || "";
               const mimeType = part.inlineData.mimeType;
-              return {
-                imageUrl: `data:${mimeType};base64,${base64EncodeString}`,
-                model: "Gemini Flash",
-              };
+              images.push(`data:${mimeType};base64,${base64EncodeString}`);
             }
           }
+        }
+
+        if (images.length > 0) {
+          return {
+            images,
+            model: "Gemini Flash",
+          };
         }
 
         throw new Error("A resposta da API não continha uma imagem.");
