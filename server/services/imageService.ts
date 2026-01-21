@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { getGeminiKeyRotator } from "../utils/apiKeyRotator";
+import { ReferenceImage } from "../types"; // garante tipagem consistente
 
 export async function createImageService() {
   const rotator = getGeminiKeyRotator();
@@ -8,32 +9,26 @@ export async function createImageService() {
     async generateImage(
       prompt: string,
       aspectRatio: string = "1:1",
-      inputImage?: { data: string; mimeType: string }
+      referenceImages: ReferenceImage[] = [] // agora aceita várias imagens
     ): Promise<{ imageUrl: string; model: string }> {
       return await rotator.executeWithRotation(async (apiKey) => {
         const ai = new GoogleGenAI({ apiKey });
 
-        const parts: any[] = [];
+        // Monta os "parts": primeiro imagens, depois texto
+        const parts: any[] = referenceImages.map((img) => ({
+          inlineData: {
+            // remove prefixo caso venha no formato data:image/png;base64,...
+            data: img.data.includes(",") ? img.data.split(",")[1] : img.data,
+            mimeType: img.mimeType,
+          },
+        }));
 
-        if (inputImage) {
-          // Primeiro envia a imagem
-          parts.push({
-            inlineData: {
-              data: inputImage.data,
-              mimeType: inputImage.mimeType,
-            },
-          });
-
-          // Depois envia instrução do usuário
-          parts.push({
-            text: prompt || "Edite esta imagem mantendo todos os elementos originais.",
-          });
-        } else {
-          // Geração só por texto
-          parts.push({
-            text: prompt || "Uma arte digital cinematográfica e detalhada",
-          });
-        }
+        // Sempre adiciona o prompt no final
+        parts.push({
+          text:
+            prompt ||
+            "Uma arte digital cinematográfica e detalhada", // fallback se não houver prompt
+        });
 
         const geminiResponse = await ai.models.generateContent({
           model: "gemini-2.5-flash-image",
@@ -41,7 +36,6 @@ export async function createImageService() {
           config: {
             imageConfig: { aspectRatio },
           },
-          // Configuração conservadora para reduzir variação
           generationConfig: {
             temperature: 0.2,
             topP: 0.8,
@@ -49,7 +43,7 @@ export async function createImageService() {
           },
         });
 
-        // Debug opcional: logar resposta completa
+        // Debug opcional
         console.log("Gemini response:", JSON.stringify(geminiResponse, null, 2));
 
         if (
