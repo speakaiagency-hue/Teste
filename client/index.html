@@ -2,10 +2,8 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Speak AI - Plataforma IA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
 
-    <!-- SEO / Social -->
     <meta property="og:title" content="Plataforma IA - Suite Criativa" />
     <meta property="og:description" content="Uma plataforma integrada para Chat IA, Criação de Prompts, Geração de Imagens e Vídeos." />
     <meta property="og:type" content="website" />
@@ -13,67 +11,14 @@
     <meta name="twitter:title" content="Plataforma IA - Suite Criativa" />
     <meta name="twitter:description" content="Uma plataforma integrada para Chat IA, Criação de Prompts, Geração de Imagens e Vídeos." />
 
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="/favicon.png" />
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Tailwind via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Estilos globais -->
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background: #020617;
-        color: #f8fafc;
-        font-weight: 300;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-      }
-      #root {
-        height: 100%;
-        width: 100%;
-      }
-      .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #1e293b;
-        border-radius: 10px;
-      }
-      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: #334155;
-      }
-    </style>
-
-    <!-- Importmap para rodar direto via CDN -->
-    <script type="importmap">
-    {
-      "imports": {
-        "react-markdown": "https://esm.sh/react-markdown@^10.1.0",
-        "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
-        "react/": "https://esm.sh/react@^19.2.3/",
-        "react": "https://esm.sh/react@^19.2.3",
-        "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-        "remark-gfm": "https://esm.sh/remark-gfm@^4.0.1"
-      }
-    }
-    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Using Outfit for Headings and Inter for Body -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet">
   </head>
   <body>
     <div id="root"></div>
-    <!-- Se usar build local (Vite/CRA), mantenha -->
-    <!-- <script type="module" src="/src/main.tsx"></script> -->
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
